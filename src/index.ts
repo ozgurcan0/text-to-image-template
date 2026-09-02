@@ -22,8 +22,8 @@ export default {
 			} satisfies AiTextToImageInput;
 
 			const response =
-				await env.AI.run<"@cf/stabilityai/stable-diffusion-xl-base-1.0">(
-					"@cf/stabilityai/stable-diffusion-xl-base-1.0",
+				await env.AI.run<"@cf/leonardo/lucid-origin">(
+					"@cf/leonardo/lucid-origin",
 					inputs,
 				);
 
