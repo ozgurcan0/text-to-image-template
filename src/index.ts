@@ -8,41 +8,41 @@ export default {
 		const prompt = url.searchParams.get("prompt");
 
 		if (!prompt) {
-			return new Response(
-				JSON.stringify({ error: "prompt is required" }),
-				{
-					status: 400,
-					headers: { "content-type": "application/json" },
-				}
+			return Response.json(
+				{ error: "prompt is required" },
+				{ status: 400 }
 			);
 		}
 
 		try {
-			const inputs = {
-				prompt,
-			} satisfies AiTextToImageInput;
-
-			const response =
-				await env.AI.run<"@cf/black-forest-labs/flux-2-dev">(
-					"@cf/black-forest-labs/flux-2-dev",
-					inputs,
-				);
-
-			return new Response(response, {
-				headers: {
-					"content-type": "image/png",
-				},
-			});
-		} catch (error) {
-			return new Response(
-				JSON.stringify({
-					error: "Image generation failed",
-					detail: String(error),
-				}),
+			const response = await env.AI.run(
+				"@cf/black-forest-labs/flux-2-dev",
 				{
-					status: 500,
-					headers: { "content-type": "application/json" },
+					multipart: {
+						prompt
+					}
 				}
+			);
+
+			const base64 = response.image;
+			const binary = Uint8Array.from(
+				atob(base64),
+				c => c.charCodeAt(0)
+			);
+
+			return new Response(binary, {
+				headers: {
+					"content-type": "image/jpeg"
+				}
+			});
+
+		} catch (error) {
+			return Response.json(
+				{
+					error: "Image generation failed",
+					detail: String(error)
+				},
+				{ status: 500 }
 			);
 		}
 	},
