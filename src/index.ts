@@ -1,7 +1,7 @@
 export default {
 	async fetch(request: Request, env: Env): Promise<Response> {
-		if (request.method !== "POST") {
-			return new Response("Only POST allowed", { status: 405 });
+		if (request.method !== "GET") {
+			return new Response("Only GET allowed", { status: 405 });
 		}
 
 		try {
