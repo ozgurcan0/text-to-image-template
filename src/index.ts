@@ -23,8 +23,8 @@ export default {
 			} satisfies AiTextToImageInput;
 
 			const response =
-				await env.AI.run<"@cf/leonardo/lucid-origin">(
-					"@cf/leonardo/lucid-origin",
+				await env.AI.run<"alibaba/qwen-image-3.0-pro">(
+					"alibaba/qwen-image-3.0-pro",
 					inputs,
 				);
 
