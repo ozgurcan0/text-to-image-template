@@ -4,21 +4,22 @@ export default {
 			return new Response("Only GET allowed", { status: 405 });
 		}
 
+		const url = new URL(request.url);
+		const prompt = url.searchParams.get("prompt");
+
+		if (!prompt) {
+			return new Response(
+				JSON.stringify({ error: "prompt is required" }),
+				{
+					status: 400,
+					headers: { "content-type": "application/json" },
+				}
+			);
+		}
+
 		try {
-			const body = await request.json() as { prompt?: string };
-
-			if (!body.prompt) {
-				return new Response(
-					JSON.stringify({ error: "prompt is required" }),
-					{
-						status: 400,
-						headers: { "content-type": "application/json" },
-					}
-				);
-			}
-
 			const inputs = {
-				prompt: body.prompt,
+				prompt,
 			} satisfies AiTextToImageInput;
 
 			const response =
@@ -32,11 +33,14 @@ export default {
 					"content-type": "image/png",
 				},
 			});
-		} catch {
+		} catch (error) {
 			return new Response(
-				JSON.stringify({ error: "Invalid JSON body" }),
+				JSON.stringify({
+					error: "Image generation failed",
+					detail: String(error),
+				}),
 				{
-					status: 400,
+					status: 500,
 					headers: { "content-type": "application/json" },
 				}
 			);
