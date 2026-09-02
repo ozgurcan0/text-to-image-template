@@ -23,8 +23,8 @@ export default {
 			} satisfies AiTextToImageInput;
 
 			const response =
-				await env.AI.run<"alibaba/qwen-image-3.0-pro">(
-					"alibaba/qwen-image-3.0-pro",
+				await env.AI.run<"@cf/black-forest-labs/flux-2-dev">(
+					"@cf/black-forest-labs/flux-2-dev",
 					inputs,
 				);
 
